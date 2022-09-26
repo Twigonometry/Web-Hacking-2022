@@ -1,7 +1,7 @@
 import hashlib
 from multiprocessing import connection
 from flask import Flask
-from flask import render_template, jsonify, make_response, redirect, request, session, render_template_string
+from flask import render_template, jsonify, make_response, redirect, request, session, url_for
 from flask_bootstrap import Bootstrap
 
 from flask_jwt_extended import create_access_token
@@ -117,6 +117,31 @@ def sqli1():
     check_session()
 
     return render_template("sqli1.html")
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
+    
+    conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute(f"SELECT id, username FROM users WHERE username='{username}' AND password='{password}'")
+    users = cur.fetchall()
+    
+    if len(users) > 0:
+        # session['SESH_id'], session['SESH_username'] = users[0]
+        return redirect(url_for("admin", allowed=True))
+    else:
+        print("Wrong username or password")
+        return render_template("sqli1.html", error="Wrong email or password")
+
+@app.route("/admin")
+def admin():
+    if not request.args.get("allowed"):
+        return redirect("/sqli1")
+    else:
+        return render_template("admin.html")
 
 @app.route("/sqli2")
 def sqli2():
