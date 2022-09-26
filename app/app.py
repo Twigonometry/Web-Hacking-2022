@@ -8,6 +8,10 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from numpy import identity
 
+from random import random
+
+import string
+
 app = Flask(__name__)
 Bootstrap(app)
 
@@ -18,44 +22,57 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
 jwt = JWTManager(app)
 
+current_sessions = []
+
 #setup sqlite
 
 @app.route("/")
 def index():
     """list all challenges"""
+    if not session.has_key("userid"):
+        tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+        while tmp_id in current_sessions:
+            tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+        session["userid"] = tmp_id
+
     return render_template("index.html")
 
 @app.route("/xss1")
 def xss1():
     """alert the cookie via reflected"""
-    return None
+    if request.args.get("flavour") and request.args.get("quantity"):
+        return render_template("xss1.html", order=True, flavour=request.args.get("flavour"), quantity=request.args.get("quantity"))
+    else:
+        return render_template("xss1.html")
 
 @app.route("/xss2")
 def xss2():
     """alert the cookie via stored + redirect user to their page"""
-    return None
+    return render_template("xss2.html")
 
 @app.route("/sqli1")
 def sqli1():
     """SQLi to login"""
-    return None
+    return render_template("sqli1.html")
 
 @app.route("/sqli2")
 def sqli2():
     """SQLi to dump creds"""
-    return None
+    return render_template("sqli2.html")
 
 @app.route("/jwt")
 def jwt():
     """edit JWT to bypass
     clear cookie after"""
-    return None
+    return render_template("jwt.html")
 
 @app.route("/idor")
 def idor():
     """IDOR challenge view admin password
     renders a profile page based on endpoint param"""
-    return None
+    return render_template("idor.html")
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=5000)

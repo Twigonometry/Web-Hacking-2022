@@ -13,3 +13,9 @@ PS > python -m flask run
 ```
 
 OR run app.py
+
+## Solutions
+
+### XSS 1
+
+`/xss1?flavour=chocolate&quantity=%3Cscript%3Ealert(%27ello%27)%3C/script%3E`

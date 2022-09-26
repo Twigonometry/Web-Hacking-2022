@@ -34,8 +34,12 @@
     }
 }
 
-a {
-    color: var(--lightBlue);
+#challenges a {
+    font-size: 1.2em;
+}
+
+#challenges a:hover {
+    color: #eb3c68;
 }
 
 /* centre the content */
@@ -149,4 +153,20 @@ form button {
 
 #form {
     padding-top: 0%;
+}
+
+/* .tooltip .tooltiptext {
+    display: none
+}
+
+.tooltip:hover .tooltiptext {
+    display: inline;
+} */
+
+.seshtooltip .tooltiptext {
+    display: none
+}
+
+.seshtooltip:hover .tooltiptext {
+    display: inline;
 }
