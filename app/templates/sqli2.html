@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Web Hacking{% endblock %}
+
+{% block content %}
+
+{{super()}}
+
+<h1>SQL Injection (SQLI) - Challenge 2</h1>
+
+<h3>Can you leak the password hash of the admin?</h3>
+
+<button onclick="showHide()">Show Hint</button>
+
+<div id="chall-hint" style="display: none">
+    If a page returns columns of data from an SQL query, it may be vulnerable to a UNION injection. Think about which fields you can control, and then look up a UNION injection and see the manual methods available. You may not even have to use UNION - you could just modify the query to include the admin's details as well.
+</div>
+
+<h4>View User Data</h4>
+
+<form action="/sqli2/getuserdata" method="GET">
+    <input type="hidden" value="{{ currusername }}" id="userid" name="userid">
+    <input type="submit" value="View Your Data">
+</form>
+
+{% if user is defined %}
+
+<h3>Your User Info</h3>
+
+<div class="user">
+    <p>ID: {{ user["id"] }}</p>
+    <p>User: {{ user["username"] }}</p>
+    <p>Password: {{ user["password"] }}</p>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+
+{{super()}}
+
+{% endblock %}

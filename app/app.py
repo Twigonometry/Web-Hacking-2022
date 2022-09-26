@@ -1,3 +1,4 @@
+import hashlib
 from multiprocessing import connection
 from flask import Flask
 from flask import render_template, jsonify, make_response, redirect, request, session, render_template_string
@@ -10,8 +11,8 @@ from flask_jwt_extended import JWTManager
 from numpy import identity
 
 import random
-
 import string
+import hashlib
 
 import sqlite3
 
@@ -41,7 +42,8 @@ def init_db():
     connection.close()
 
 def check_session():
-    """check required param is in session"""
+    """check required param is in session
+    add a user to users if not"""
     if "userid" not in session:
         tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
@@ -49,6 +51,21 @@ def check_session():
             tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
         session["userid"] = tmp_id
+
+    conn = get_db_connection()
+    users = conn.execute("SELECT * FROM users WHERE username = ?", (session["userid"],)).fetchall()
+    print("Users")
+    print(users)
+    # print(users[0]["username"])
+    # print(users[0])
+    if len(users) < 1:
+        print("adding")
+        hash = hashlib.md5(session["userid"].encode('utf-8')).hexdigest()
+        print(hash)
+        conn.execute('INSERT INTO users (username, password) VALUES (?, ?)', (session["userid"], hash))
+        conn.commit()
+    
+    conn.close()
 
 @app.route("/")
 def index():
@@ -104,7 +121,22 @@ def sqli2():
     """SQLi to dump creds"""
     check_session()
 
-    return render_template("sqli2.html")
+    return render_template("sqli2.html", currusername=session["userid"])
+
+@app.route("/sqli2/getuserdata")
+def getuserdata():
+    print("getuserdata")
+    check_session()
+
+    conn = get_db_connection()
+    print("userid")
+    print(request.form.get("userid"))
+    users = conn.execute("SELECT * FROM users WHERE username = ?", (request.args.get("userid"),)).fetchall()
+    # users = conn.execute("SELECT * FROM users").fetchall()
+    print("second users")
+    print(users)
+
+    return render_template("sqli2.html", user=users[0])
 
 @app.route("/jwt")
 def jwt():
