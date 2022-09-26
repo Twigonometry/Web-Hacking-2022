@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Web Hacking{% endblock %}
+
+{% block content %}
+
+{{super()}}
+
+<h1>Can you break into the cookie jar?</h1>
+
+{% if successful %}
+
+<h3>Congrats! You figured it out.</h3>
+
+<h3><a href="/">Go back</a> to the list of challenges.</h3>
+
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+
+{{super()}}
+
+{% endblock %}

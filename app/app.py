@@ -158,7 +158,6 @@ def getuserdata():
     conn = get_db_connection()
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
-    # print(f"SELECT * FROM users WHERE username = '{0}'".format(request.args.get("userid")))
     users = cur.execute(f"SELECT * FROM users WHERE username = '" + request.args.get("userid") + "'").fetchall()
 
     print("second users")
@@ -166,21 +165,19 @@ def getuserdata():
 
     return render_template("sqli2.html", user=users[0])
 
-@app.route("/jwt")
-def jwt():
-    """edit JWT to bypass
-    clear cookie after"""
+@app.route("/cookies")
+def cookies():
+    """edit cookie to isAdmin=True"""
     check_session()
 
-    return render_template("jwt.html")
-
-@app.route("/idor")
-def idor():
-    """IDOR challenge view admin password
-    renders a profile page based on endpoint param"""
-    check_session()
-
-    return render_template("idor.html")
+    if request.cookies.get('isAdmin') == "True":
+        resp = make_response(render_template("cookies.html", successful=True))
+        resp.set_cookie('isAdmin', '', expires=0)
+        return resp
+    else:
+        resp = make_response(render_template("cookies.html"))
+        resp.set_cookie('isAdmin', "False")
+        return resp
 
 if __name__ == '__main__':
     init_db()
