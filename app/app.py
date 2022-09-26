@@ -45,12 +45,14 @@ def check_session():
     """check required param is in session
     add a user to users if not"""
     if "userid" not in session:
+        print("new session")
         tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
         while tmp_id in current_sessions:
             tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
         session["userid"] = tmp_id
+        print(tmp_id)
 
     conn = get_db_connection()
     users = conn.execute("SELECT * FROM users WHERE username = ?", (session["userid"],)).fetchall()
@@ -129,10 +131,11 @@ def getuserdata():
     check_session()
 
     conn = get_db_connection()
-    print("userid")
-    print(request.form.get("userid"))
-    users = conn.execute("SELECT * FROM users WHERE username = ?", (request.args.get("userid"),)).fetchall()
-    # users = conn.execute("SELECT * FROM users").fetchall()
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    # print(f"SELECT * FROM users WHERE username = '{0}'".format(request.args.get("userid")))
+    users = cur.execute(f"SELECT * FROM users WHERE username = '" + request.args.get("userid") + "'").fetchall()
+
     print("second users")
     print(users)
 
