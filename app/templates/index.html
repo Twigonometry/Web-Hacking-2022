@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Web Hacking{% endblock %}
+
+{% block content %}
+
+{{super()}}
+
+<h1>SESH Introduction to Web Hacking 2022</h1>
+
+<h3>Pick any of the challenges below!</h3>
+
+<div class="centre">
+    <form action="/xss1">
+        <input type="submit" value="XSS Challenge 1">
+    </form>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+{{super()}}
+
+{% endblock %}

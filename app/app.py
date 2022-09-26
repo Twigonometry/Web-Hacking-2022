@@ -23,7 +23,7 @@ jwt = JWTManager(app)
 @app.route("/")
 def index():
     """list all challenges"""
-    return None
+    return render_template("index.html")
 
 @app.route("/xss1")
 def xss1():
@@ -56,3 +56,7 @@ def idor():
     """IDOR challenge view admin password
     renders a profile page based on endpoint param"""
     return None
+
+if __name__ == '__main__':
+    app.run(host="127.0.0.1", port=5000)
+    # app.run(host="0.0.0.0", port=80)

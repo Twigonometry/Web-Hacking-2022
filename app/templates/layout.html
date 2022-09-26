@@ -1,0 +1,25 @@
+<!doctype html>
+{% extends "bootstrap/base.html" %}
+
+<html>
+    {% block head %}
+        <head>
+            {% block styles %}
+                {{super()}}
+                <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            {% endblock styles %}
+            <title>{% block title %}{% endblock %}</title>
+        </head>
+    {% endblock head %}
+    {% block body %}
+        <body>
+            <div id="wrapper">
+                <div id="content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </body>
+    {% endblock body %}
+</html>

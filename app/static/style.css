@@ -1,0 +1,152 @@
+:root {
+    --backgroundColor: #1c1e29;
+    --backgroundColorLight: #33354b;
+    --bodyColor: #fff;
+    --pinkColor: #eb3c68;
+    --lightBlue: #00e7e7;
+    --bodyFont: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+@keyframes slidein-left {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slidein-right {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slidein-up {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+a {
+    color: var(--lightBlue);
+}
+
+/* centre the content */
+
+#content {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 3px;
+    background-color: var(--backgroundColorLight);
+    color: white;
+}
+
+.centre {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+}
+
+#banner {
+    display: flex;
+    margin: auto;
+    align-items:center;
+    justify-content:center;
+}
+
+#banner h1 {
+    font-size: 4em;
+}
+
+#banner h2 {
+    font-size: 2.8em;
+    color: var(--pinkColor);
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#logo {
+    max-width: 180px;
+    max-height: 180px;
+}
+
+.flexcol {
+    display: flex;
+    flex-direction: column;
+}
+
+#form, #congrats {
+    padding: 4%;
+}
+
+#form label {
+    font-size: 2.5em;
+}
+
+form div {
+    width: 80%;
+    align-items:center;
+    justify-content:center;
+}
+
+form label, form input, form button {
+    max-width: 100%;
+}
+
+form input.submit {
+    margin-top: 5%;
+}
+
+form button {
+    margin-top: 15%;
+}
+
+.blue {
+    color: var(--lightBlue);
+}
+
+.pink {
+    color: var(--pinkColor)
+}
+
+#intro-headers {
+    text-align:center;
+}
+
+#intro-headers h1 {
+    font-weight: bold;
+    font-size: 9em;
+}
+
+#first-header {
+    animation: 2s slidein-left ease;
+}
+
+#second-header {
+    animation: 2.6s slidein-right ease;
+}
+
+#third-header {
+    animation: 3s slidein-left ease;
+}
+
+#upgroup  {
+    animation: 2.8s slidein-up ease;
+}
+
+#form {
+    padding-top: 0%;
+}
