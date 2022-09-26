@@ -18,12 +18,25 @@
 
 <h4>Post a comment about our society :)</h4>
 
-<form action="/xss2/comment">
-    <label for="flavour">Your Comment:</label>
-    <input type="text" name="flavour" id="flavour">
+<form action="/xss2/comment" method="POST">
+    <label for="comment">Your Comment:</label>
+    <input type="text" name="comment" id="comment">
 
     <input type="submit" value="Submit Comment">
 </form>
+
+{% if comments is defined %}
+
+<h3>Comments</h3>
+{% for comment in comments %}
+<div class="comment">
+    <p>{{ comment["id"] }}</p>
+    <p>{{ comment["comment"] | safe}}</p>
+    <p>{{ comment["userid"] }}</p>
+</div>
+{% endfor %}
+
+{% endif %}
 
 {% endblock %}
 

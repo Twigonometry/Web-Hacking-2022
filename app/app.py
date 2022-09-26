@@ -1,3 +1,4 @@
+from multiprocessing import connection
 from flask import Flask
 from flask import render_template, jsonify, make_response, redirect, request, session, render_template_string
 from flask_bootstrap import Bootstrap
@@ -32,9 +33,15 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route("/")
-def index():
-    """list all challenges"""
+def init_db():
+    connection = get_db_connection()
+    with open('seed.sql') as f:
+        connection.executescript(f.read())
+    connection.commit()
+    connection.close()
+
+def check_session():
+    """check required param is in session"""
     if "userid" not in session:
         tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
@@ -43,11 +50,18 @@ def index():
 
         session["userid"] = tmp_id
 
+@app.route("/")
+def index():
+    """list all challenges"""
+    check_session()
+
     return render_template("index.html")
 
 @app.route("/xss1")
 def xss1():
     """alert the cookie via reflected"""
+    check_session()
+
     if request.args.get("flavour") and request.args.get("quantity"):
         return render_template("xss1.html", order=True, flavour=request.args.get("flavour"), quantity=request.args.get("quantity"))
     else:
@@ -56,38 +70,59 @@ def xss1():
 @app.route("/xss2")
 def xss2():
     """alert the cookie via stored + redirect user to their page"""
+    check_session()
+
     conn = get_db_connection()
-    comments = conn.execute("SELECT * FROM posts WHERE userid = ?", session["userid"]).fetchall()
-    return render_template("xss2.html", comments=comments)
+    comments = conn.execute("SELECT * FROM comments WHERE userid = ?", (session["userid"],)).fetchall()
+
+    if len(comments) > 0:
+        return render_template("xss2.html", comments=comments)
+    else:
+        return render_template("xss2.html")
 
 @app.route("/xss2/comment", methods=["POST"])
 def insert_comment():
     """insert a comment"""
+    check_session()
+
     conn = get_db_connection()
+    conn.execute('INSERT INTO comments (comment, userid) VALUES (?, ?)', (request.form.get("comment"), session["userid"]))
+    conn.commit()
+    conn.close()
+
     return redirect("/xss2")
 
 @app.route("/sqli1")
 def sqli1():
     """SQLi to login"""
+    check_session()
+
     return render_template("sqli1.html")
 
 @app.route("/sqli2")
 def sqli2():
     """SQLi to dump creds"""
+    check_session()
+
     return render_template("sqli2.html")
 
 @app.route("/jwt")
 def jwt():
     """edit JWT to bypass
     clear cookie after"""
+    check_session()
+
     return render_template("jwt.html")
 
 @app.route("/idor")
 def idor():
     """IDOR challenge view admin password
     renders a profile page based on endpoint param"""
+    check_session()
+
     return render_template("idor.html")
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000)
+    init_db()
+    app.run(host="127.0.0.1", port=5000, debug=True)
     # app.run(host="0.0.0.0", port=80)
