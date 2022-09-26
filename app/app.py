@@ -8,9 +8,11 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from numpy import identity
 
-from random import random
+import random
 
 import string
+
+import sqlite3
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -25,11 +27,15 @@ jwt = JWTManager(app)
 current_sessions = []
 
 #setup sqlite
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 @app.route("/")
 def index():
     """list all challenges"""
-    if not session.has_key("userid"):
+    if "userid" not in session:
         tmp_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
         while tmp_id in current_sessions:
@@ -50,7 +56,15 @@ def xss1():
 @app.route("/xss2")
 def xss2():
     """alert the cookie via stored + redirect user to their page"""
-    return render_template("xss2.html")
+    conn = get_db_connection()
+    comments = conn.execute("SELECT * FROM posts WHERE userid = ?", session["userid"]).fetchall()
+    return render_template("xss2.html", comments=comments)
+
+@app.route("/xss2/comment", methods=["POST"])
+def insert_comment():
+    """insert a comment"""
+    conn = get_db_connection()
+    return redirect("/xss2")
 
 @app.route("/sqli1")
 def sqli1():

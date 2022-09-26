@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}Web Hacking{% endblock %}
+
+{% block content %}
+
+{{super()}}
+
+<h1>Cross-Site Scripting (XSS) - Challenge 2</h1>
+
+<h3>Can you cause an alert using stored XSS?</h3>
+
+<button onclick="showHide()">Show Hint</button>
+
+<div id="chall-hint" style="display: none">
+    Some XSS payloads are delivered in the URL, but some are stored permanently in a database.
+</div>
+
+<h4>Post a comment about our society :)</h4>
+
+<form action="/xss2/comment">
+    <label for="flavour">Your Comment:</label>
+    <input type="text" name="flavour" id="flavour">
+
+    <input type="submit" value="Submit Comment">
+</form>
+
+{% endblock %}
+
+{% block footer %}
+
+{{super()}}
+
+{% endblock %}

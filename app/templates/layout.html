@@ -21,5 +21,16 @@
                 </div>
             </div>
         </body>
+
+        <script>
+            function showHide() {
+                var x = document.getElementById("chall-hint");
+                if (x.style.display === "none") {
+                  x.style.display = "block";
+                } else {
+                  x.style.display = "none";
+                }
+              } 
+        </script>
     {% endblock body %}
 </html>

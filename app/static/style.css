@@ -170,3 +170,7 @@ form button {
 .seshtooltip:hover .tooltiptext {
     display: inline;
 }
+
+/* #chall-hint {
+    display: none;
+} */

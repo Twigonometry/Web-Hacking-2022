@@ -10,10 +10,11 @@
 
 <h3>Can you cause this webpage to pop up an alert?</h3>
 
-<div class="seshtooltip">
-    <p>Hints about cross-site scripting attacks - hover here to reveal</p>
-    <span class="tooltiptext">XSS occurs when user input isn't handled properly. You can use it to force to webpage to run javascript code. Try looking for somewhere on this page where you can input data and look up the javascript syntax for an alert.</span>
-</div>
+<button onclick="showHide()">Show Hint</button>
+
+<div id="chall-hint" style="display: none">
+    XSS occurs when user input isn't handled properly. You can use it to force to webpage to run javascript code. Try looking for somewhere on this page where you can input data and look up the javascript syntax for an alert.
+</div> 
 
 {% if order %}
 
